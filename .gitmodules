@@ -1,0 +1,6 @@
+[submodule "shared-modules"]
+	path = shared-modules
+	url = https://github.com/flathub/shared-modules
+[submodule "dusans-shared-modules"]
+	path = dusans-shared-modules
+	url = https://github.com/dusansimic/flatpak-shared-modules

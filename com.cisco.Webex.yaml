@@ -1,0 +1,44 @@
+app-id: com.cisco.Webex
+runtime: org.freedesktop.Platform
+runtime-version: "23.08"
+sdk: org.freedesktop.Sdk
+command: webex
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - --socket=pulseaudio
+  - --device=all
+  - --filesystem=xdg-download
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.gnome.SessionManager
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --env=TZ=
+modules:
+  - dusans-shared-modules/ImageMagick/ImageMagick.yaml
+  - shared-modules/libsecret/libsecret.json
+  - name: webex
+    buildsystem: simple
+    build-commands:
+      - bsdtar -xf webex.deb
+      - bsdtar -xf data.tar.xz
+      - ls -l
+      - cp -r opt/Webex/bin/* "${FLATPAK_DEST}/bin"
+      - cp -r opt/Webex/lib/* "${FLATPAK_DEST}/lib"
+      - cp -r opt/Webex/qml "${FLATPAK_DEST}/"
+      - install -Dm644 opt/Webex/bin/webex.desktop "${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop"
+      - desktop-file-edit --set-key=Exec --set-value=webex --set-key=Version --set-value=1.0 --set-comment="Cisco Webex desktop application" --set-icon=${FLATPAK_ID} "${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop"
+      - for size in 64 128 264 512; do convert opt/Webex/bin/sparklogosmall.png -resize "${size}" "${FLATPAK_ID}.png"; install -Dm644 "${FLATPAK_ID}.png" "${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps/${FLATPAK_ID}.png"; done
+      - install -Dm755 webex.sh "${FLATPAK_DEST}/bin/webex"
+      - install -Dm644 "${FLATPAK_ID}.metainfo.xml" -t "${FLATPAK_DEST}/share/metainfo"
+    sources:
+      - type: file
+        dest-filename: webex.deb
+        url: https://binaries.webex.com/WebexDesktop-Ubuntu-Official-Package/Webex.deb
+        sha256: 29f2db2f82b17b402e3c4ec854aee6be409a54fa460bb39a91c4c41e157dd19d
+      - type: file
+        path: webex.sh
+      - type: file
+        path: com.cisco.Webex.metainfo.xml
