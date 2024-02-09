@@ -24,7 +24,6 @@ modules:
     build-commands:
       - bsdtar -xf webex.deb
       - bsdtar -xf data.tar.xz
-      - ls -l
       - cp -r opt/Webex/bin/* "${FLATPAK_DEST}/bin"
       - cp -r opt/Webex/lib/* "${FLATPAK_DEST}/lib"
       - cp -r opt/Webex/qml "${FLATPAK_DEST}/"
