@@ -1,0 +1,21 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        name: Build
+        with:
+          bundle: com.cisco.Webex.flatpak
+          manifest-path: com.cisco.Webex.yaml
+          cache-key: flatpak-builder-${{ github.sha }}
